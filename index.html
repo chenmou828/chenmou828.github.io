@@ -1,61 +1,223 @@
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>邮箱测压，要干合法的事</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: #ffffff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 40px 20px; color: #1e293b; }
-        .container { max-width: 520px; margin: 0 auto; background: #fff; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; padding: 32px 28px; }
-        h1 { font-size: 24px; font-weight: 600; margin-bottom: 6px; color: #0f172a; }
-        .sub { color: #64748b; font-size: 14px; margin-bottom: 28px; padding-bottom: 16px; border-bottom: 1px solid #eef2f6; }
-        .form-group { margin-bottom: 24px; }
-        label { display: block; font-weight: 500; font-size: 14px; margin-bottom: 8px; color: #334155; }
-        input { width: 100%; padding: 12px 16px; font-size: 16px; border: 1px solid #cbd5e1; border-radius: 12px; background: #ffffff; transition: 0.2s; outline: none; }
-        input:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
-        button { background: #3b82f6; color: white; border: none; width: 100%; padding: 14px; font-size: 16px; font-weight: 600; border-radius: 40px; cursor: pointer; transition: 0.2s; margin-top: 8px; }
-        button:hover { background: #2563eb; }
-        .result-area { margin-top: 28px; background: #f8fafc; border-radius: 16px; padding: 18px; border: 1px solid #eef2f6; max-height: 450px; overflow-y: auto; }
-        .log-item { font-family: monospace; font-size: 13px; padding: 6px 0; border-bottom: 1px solid #e6edf4; }
-        .log-success { color: #0f7b3a; }
-        .log-error { color: #dc2626; }
-        .log-info { color: #3b82f6; }
-        .log-response { color: #6b7280; font-size: 11px; padding-left: 20px; word-break: break-all; }
-        .footer { margin-top: 24px; text-align: center; font-size: 12px; color: #94a3b8; }
-        .interface-select { display: flex; gap: 12px; flex-wrap: wrap; }
-        .interface-select label { display: flex; align-items: center; gap: 6px; font-weight: normal; cursor: pointer; padding: 6px 12px; border: 1px solid #e2e8f0; border-radius: 8px; background: #f8fafc; }
-        .interface-select label:hover { background: #eef2f6; }
-        .interface-select input[type="radio"] { width: auto; margin: 0; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>接口测试控制台</title>
+
+<style>
+body{
+    margin:0;
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
+    background: linear-gradient(135deg,#0f172a,#1e293b);
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+    color:#e2e8f0;
+}
+
+.container{
+    width:100%;
+    max-width:540px;
+    background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:18px;
+    padding:24px;
+    backdrop-filter: blur(10px);
+    box-shadow:0 20px 60px rgba(0,0,0,0.5);
+}
+
+h1{
+    text-align:center;
+    margin:0;
+    font-size:20px;
+}
+
+.sub{
+    text-align:center;
+    font-size:12px;
+    color:#94a3b8;
+    margin-top:6px;
+    margin-bottom:18px;
+}
+
+.form-group{
+    margin-bottom:14px;
+}
+
+label{
+    display:block;
+    font-size:13px;
+    margin-bottom:6px;
+    color:#cbd5e1;
+}
+
+input{
+    width:100%;
+    padding:12px;
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,0.15);
+    background:rgba(255,255,255,0.05);
+    color:white;
+    outline:none;
+}
+
+.interface{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+.interface label{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    padding:8px 10px;
+    border:1px solid rgba(255,255,255,0.15);
+    border-radius:10px;
+    cursor:pointer;
+    background:rgba(255,255,255,0.04);
+}
+
+button{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+    color:white;
+    background:linear-gradient(135deg,#3b82f6,#2563eb);
+    transition:0.2s;
+}
+
+button:hover{
+    transform:translateY(-2px);
+    box-shadow:0 10px 25px rgba(59,130,246,0.3);
+}
+
+/* 控制台 */
+.console{
+    margin-top:16px;
+    height:220px;
+    overflow-y:auto;
+    background:#050b18;
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:12px;
+    padding:10px;
+    font-family: ui-monospace;
+    font-size:12px;
+}
+
+.log{
+    margin:2px 0;
+    white-space:pre-wrap;
+}
+
+.info{color:#38bdf8;}
+.success{color:#22c55e;}
+.error{color:#ef4444;}
+.warn{color:#f59e0b;}
+
+.footer{
+    text-align:center;
+    font-size:12px;
+    color:#64748b;
+    margin-top:10px;
+}
+</style>
 </head>
+
 <body>
+
 <div class="container">
-    <h1>邮箱测压</h1>
-    <div class="sub">官方频道@chenmou114514借鉴@taxd520</div>
+    <h1>接口测试控制台</h1>
+    <div class="sub">模拟执行 · 日志输出 · 调试工具</div>
 
-    <form method="POST" action="">
-        <div class="form-group">
-            <label>QQ邮箱</label>
-            <input type="email" name="email" placeholder="如 123456@qq.com" value="" required>
-        </div>
-        <div class="form-group">
-            <label>选择接口</label>
-            <div class="interface-select">
-                <label><input type="radio" name="interface" value="1" checked> 接口1</label>
-                <label><input type="radio" name="interface" value="2" > 接口2</label>
-                <label><input type="radio" name="interface" value="3" > 接口3</label>
-            </div>
-        </div>
-        <div class="form-group">
-            <label>发送次数 (1-30)</label>
-            <input type="number" name="times" value="1" min="1" max="30" step="1" required>
-        </div>
-        <button type="submit">开始发送</button>
-    </form>
+    <div class="form-group">
+        <label>目标邮箱</label>
+        <input id="email" placeholder="test@example.com">
+    </div>
 
-        <div class="footer">2026</div>
+    <div class="form-group">
+        <label>接口选择</label>
+        <div class="interface">
+            <label><input type="radio" name="api" value="1" checked> API 1</label>
+            <label><input type="radio" name="api" value="2"> API 2</label>
+            <label><input type="radio" name="api" value="3"> API 3</label>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>执行次数</label>
+        <input id="times" type="number" min="1" max="10" value="3">
+    </div>
+
+    <button onclick="startTest()">开始执行</button>
+
+    <div class="console" id="console"></div>
+
+    <div class="footer">模拟控制台 · 不执行真实网络请求</div>
 </div>
+
+<script>
+const box = document.getElementById("console");
+
+function log(msg,type="info"){
+    const div = document.createElement("div");
+    div.className = "log " + type;
+    div.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+    box.appendChild(div);
+    box.scrollTop = box.scrollHeight;
+}
+
+function sleep(ms){
+    return new Promise(r=>setTimeout(r,ms));
+}
+
+async function startTest(){
+    const email = document.getElementById("email").value;
+    const times = parseInt(document.getElementById("times").value);
+    const api = document.querySelector('input[name="api"]:checked').value;
+
+    box.innerHTML = "";
+
+    if(!email){
+        log("请输入邮箱","error");
+        return;
+    }
+
+    log("系统初始化中...","info");
+    await sleep(500);
+
+    log(`目标: ${email}`,"info");
+    log(`选择接口: API ${api}`,"info");
+    log(`执行次数: ${times}`,"warn");
+
+    await sleep(500);
+
+    log("开始模拟任务执行...","info");
+
+    for(let i=1;i<=times;i++){
+        log(`第 ${i} 次请求发送中...`,"info");
+        await sleep(600);
+
+        // 模拟成功/失败
+        if(Math.random() > 0.2){
+            log(`第 ${i} 次执行成功`,"success");
+        }else{
+            log(`第 ${i} 次执行失败（模拟网络错误）`,"error");
+        }
+
+        await sleep(300);
+    }
+
+    log("任务执行完成","success");
+}
+</script>
+
 </body>
 </html>
